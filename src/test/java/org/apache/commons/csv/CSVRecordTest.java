@@ -1,194 +1,509 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package org.apache.commons.csv;
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
+	<groupId>uk.co.jemos.podam</groupId>
+	<artifactId>podam</artifactId>
+	<version>7.1.0-SNAPSHOT</version>
+	<name>podam</name>
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<serenity.version>1.1.36</serenity.version>
+		<spring.version>4.1.6.RELEASE</spring.version>
+		<log4j.version>2.6.2</log4j.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<github.global.server>github</github.global.server>
+	</properties>
 
-public class CSVRecordTest {
+	<url>http://devopsfolks.github.io/podam/</url>
+	<licenses>
+		<license>
+			<name>Podam runs under the MIT license</name>
+			<url>LICENSE.txt</url>
+		</license>
+	</licenses>
 
-    private enum EnumFixture { UNKNOWN_COLUMN }
+	<issueManagement>
+		<system>JIRA</system>
+		<url>https://agileguru.atlassian.net</url>
+	</issueManagement>
 
-    private String[] values;
-    private CSVRecord record, recordWithHeader;
-    private Map<String, Integer> header;
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>https://jemos.ci.cloudbees.com/job/podam/</url>
+	</ciManagement>
 
-    @Before
-    public void setUp() throws Exception {
-        values = new String[] { "A", "B", "C" };
-        record = new CSVRecord(values, null, null, 0, -1);
-        header = new HashMap<String, Integer>();
-        header.put("first", Integer.valueOf(0));
-        header.put("second", Integer.valueOf(1));
-        header.put("third", Integer.valueOf(2));
-        recordWithHeader = new CSVRecord(values, header, null, 0, -1);
-    }
+	<mailingLists>
+		<mailingList>
+			<name>PODAM - Google Groups</name>
+			<subscribe>http://groups.google.com/group/podam</subscribe>
+			<unsubscribe>http://groups.google.com/group/podam</unsubscribe>
+		</mailingList>
+	</mailingLists>
 
-    @Test
-    public void testGetInt() {
-        assertEquals(values[0], record.get(0));
-        assertEquals(values[1], record.get(1));
-        assertEquals(values[2], record.get(2));
-    }
+	<scm>
+		<url>scm:git clone git@github.com:devopsfolks/podam.git</url>
+		<connection>scm:git clone git://github.com/devopsfolks/podam.git</connection>
+	</scm>
 
-    @Test
-    public void testGetString() {
-        assertEquals(values[0], recordWithHeader.get("first"));
-        assertEquals(values[1], recordWithHeader.get("second"));
-        assertEquals(values[2], recordWithHeader.get("third"));
-    }
+	<developers>
+		<developer>
+			<id>mtedone</id>
+			<name>Marco Tedone</name>
+			<email>marco.tedone@gmail.com</email>
+			<organization>Jemos</organization>
+			<organizationUrl>http://www.jemos.co.uk</organizationUrl>
+			<roles>
+				<role>Project Lead</role>
+			</roles>
+			<timezone>UTC</timezone>
+			<url>http://www.linkedin.com/in/mtedone</url>
+		</developer>
+	</developers>
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetStringInconsistentRecord() {
-        header.put("fourth", Integer.valueOf(4));
-        recordWithHeader.get("fourth");
-    }
+	<contributors>
+		<contributor>
+			<name>Daniil Ivanov</name>
+			<email>daniil.ivanov@gmail.com</email>
+			<roles>
+				<role>Contributor</role>
+			</roles>
+			<timezone>EET</timezone>
+		</contributor>
+		<contributor>
+			<name>Alec Ross</name>
+			<email>haelduksf@gmail.com</email>
+			<organization>Insigma Hengtian Software</organization>
+			<organizationUrl>http://www.hengtiansoft.com</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>CST</timezone>
+		</contributor>
+		<contributor>
+			<name>Márcio Carmona</name>
+			<email>marciocarmona@gmail.com</email>
+			<organizationUrl>http://www.linkedin.com/in/marciocarmona</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>UTC-4</timezone>
+		</contributor>
+		<contributor>
+			<name>Ganesh Subramanian</name>
+			<email>tbd@somedomain.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</contributor>
+		<contributor>
+			<name>Antony Stubbs</name>
+			<email>antony.stubbs@gmail.com</email>
+			<organizationUrl>https://www.linkedin.com/in/antonystubbs</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</contributor>
+		<contributor>
+			<name>Bradley Baetz</name>
+			<email>bradley.baetz@tobedefined.com</email>
+			<organizationUrl>https://tobedefined.com</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</contributor>
+		<contributor>
+			<name>Victor Basso</name>
+			<email>vitobasso@gmail.com</email>
+			<organizationUrl>http://www.sagaranatech.com</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>UTC-3</timezone>
+		</contributor>
+		<contributor>
+			<name>Clément Oukhemanou</name>
+			<email>c.oukhemanou@radhius.fr</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</contributor>
+        <contributor>
+            <name>Francoise-Xavier Bonnet</name>
+            <email>francoise.bonnet@gmail.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
+	</contributors>
 
-    @Test(expected = IllegalStateException.class)
-    public void testGetStringNoHeader() {
-        record.get("first");
-    }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetUnmappedEnum() {
-        assertNull(recordWithHeader.get(EnumFixture.UNKNOWN_COLUMN));
-    }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetUnmappedName() {
-        assertNull(recordWithHeader.get("fourth"));
-    }
+	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.scm</groupId>
+				<artifactId>maven-scm-provider-gitexe</artifactId>
+				<version>1.3</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.scm</groupId>
+				<artifactId>maven-scm-manager-plexus</artifactId>
+				<version>1.3</version>
+			</extension>
+			<extension>
+				<groupId>org.kathrynhuxtable.maven.wagon</groupId>
+				<artifactId>wagon-gitsite</artifactId>
+				<version>0.3.1</version>
+			</extension>
+		</extensions>
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
-    public void testGetUnmappedNegativeInt() {
-        assertNull(recordWithHeader.get(Integer.MIN_VALUE));
-    }
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<attach>true</attach>
+					<show>private</show>
+					<doctitle>Jemos Podam API - Version: ${project.version}</doctitle>
+					<footer>Jemos 2002 - 2014: All Rights Reserved. Podam runs under
+						the MIT license</footer>
+					<additionalparam>${javadoc.opts}</additionalparam>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.3</version>
+			</plugin>
+			<plugin>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<version>0.12</version>
+				<configuration>
+					<message>Creating site for ${project.version}</message>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>site</goal>
+						</goals>
+						<phase>site</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.7</version>
+			</plugin>
+			<!-- It signs the artifact for uploading to Maven Central -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2</version>
+				<executions>
+					<execution>
+						<id>assembly-project</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<outputDirectory>${project.build.directory}/site/downloads</outputDirectory>
+					<descriptors>
+						<descriptor>src/main/assembly/project.xml</descriptor>
+						<descriptor>src/main/assembly/bin.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>					
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>2.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.6.201602180812</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.19</version>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/Test*.java</include>
+						<include>**/When*.java</include>
+						<include>**/*TestSuite.java</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>net.serenity-bdd.maven.plugins</groupId>
+				<artifactId>serenity-maven-plugin</artifactId>
+				<version>${serenity.version}</version>
+				<executions>
+					<execution>
+						<id>thucydides-reports</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>aggregate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<reporting>
+		<outputDirectory>${basedir}/target/site</outputDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.7</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>project-team</report>
+							<report>mailing-list</report>
+							<report>cim</report>
+							<report>issue-tracking</report>
+							<report>license</report>
+							<report>scm</report>
+							<report>summary</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<configuration>
+					<attach>true</attach>
+					<show>private</show>
+					<doctitle>Jemos Podam API - Version: ${project.version}</doctitle>
+					<footer>Jemos 2002 - 2014: All Rights Reserved. Podam runs under
+						the MIT license</footer>
+					<additionalparam>${javadoc.opts}</additionalparam>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.18.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.6.201602180812</version>
+			</plugin>
+			<plugin>
+				<groupId>net.serenity-bdd.maven.plugins</groupId>
+				<artifactId>serenity-maven-plugin</artifactId>
+				<version>${serenity.version}</version>
+			</plugin>
+		</plugins>
+	</reporting>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+		<site>
+			<id>github-project-site</id>
+			<url>gitsite:git@github.com/devopsfolks/podam.git</url>
+		</site>
+	</distributionManagement>
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
-    public void testGetUnmappedPositiveInt() {
-        assertNull(recordWithHeader.get(Integer.MAX_VALUE));
-    }
+	<dependencies>
+		<dependency>
+			<groupId>net.jcip</groupId>
+			<artifactId>jcip-annotations</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.21</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>jsr250-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.1.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
 
-    @Test
-    public void testIsConsistent() {
-        assertTrue(record.isConsistent());
-        assertTrue(recordWithHeader.isConsistent());
+		<!-- Testing dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-jcl</artifactId>
+			<version>${log4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.2.4.Final</version>
+			<scope>test</scope>
+		</dependency>
 
-        header.put("fourth", Integer.valueOf(4));
-        assertFalse(recordWithHeader.isConsistent());
-    }
 
-    @Test
-    public void testIsMapped() {
-        assertFalse(record.isMapped("first"));
-        assertTrue(recordWithHeader.isMapped("first"));
-        assertFalse(recordWithHeader.isMapped("fourth"));
-    }
+		<!-- Spring framework -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
 
-    @Test
-    public void testIsSet() {
-        assertFalse(record.isSet("first"));
-        assertTrue(recordWithHeader.isSet("first"));
-        assertFalse(recordWithHeader.isSet("fourth"));
-    }
 
-    @Test
-    public void testIterator() {
-        int i = 0;
-        for (final String value : record) {
-            assertEquals(values[i], value);
-            i++;
-        }
-    }
+		<!-- Serenity-BDD -->
+		<dependency>
+			<groupId>net.serenity-bdd</groupId>
+			<artifactId>serenity-junit</artifactId>
+			<version>${serenity.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
-    @Test
-    public void testPutInMap() {
-        final Map<String, String> map = new ConcurrentHashMap<String, String>();
-        this.recordWithHeader.putIn(map);
-        this.validateMap(map, false);
-        // Test that we can compile with assigment to the same map as the param.
-        final TreeMap<String, String> map2 = recordWithHeader.putIn(new TreeMap<String, String>());
-        this.validateMap(map2, false);
-    }
+	<profiles>
+		<profile>
+			<id>doclint-java8</id>
+			<activation>
+				<jdk>[1.8,)</jdk>
+			</activation>
+			<properties>
+				<javadoc.opts>-Xdoclint:all</javadoc.opts>
+			</properties>
+		</profile>
+	</profiles>
 
-    @Test
-    public void testRemoveAndAddColumns() throws IOException {
-        // do:
-        final CSVPrinter printer = new CSVPrinter(new StringBuilder(), CSVFormat.DEFAULT);
-        final Map<String, String> map = recordWithHeader.toMap();
-        map.remove("OldColumn");
-        map.put("ZColumn", "NewValue");
-        // check:
-        final ArrayList<String> list = new ArrayList<String>(map.values());
-        Collections.sort(list);
-        printer.printRecord(list);
-        Assert.assertEquals("A,B,C,NewValue" + CSVFormat.DEFAULT.getRecordSeparator(), printer.getOut().toString());
-        printer.close();
-    }
 
-    @Test
-    public void testToMap() {
-        final Map<String, String> map = this.recordWithHeader.toMap();
-        this.validateMap(map, true);
-    }
+</project>
 
-    @Test
-    public void testToMapWithShortRecord() throws Exception {
-       final CSVParser parser =  CSVParser.parse("a,b", CSVFormat.DEFAULT.withHeader("A", "B", "C"));
-       final CSVRecord shortRec = parser.iterator().next();
-       shortRec.toMap();
-    }
-
-    @Test
-    public void testToMapWithNoHeader() throws Exception {
-       final CSVParser parser =  CSVParser.parse("a,b", CSVFormat.newFormat(','));
-       final CSVRecord shortRec = parser.iterator().next();
-       final Map<String, String> map = shortRec.toMap();
-       assertNotNull("Map is not null.", map);
-       assertTrue("Map is empty.", map.isEmpty());
-    }
-
-    private void validateMap(final Map<String, String> map, final boolean allowsNulls) {
-        assertTrue(map.containsKey("first"));
-        assertTrue(map.containsKey("second"));
-        assertTrue(map.containsKey("third"));
-        assertFalse(map.containsKey("fourth"));
-        if (allowsNulls) {
-            assertFalse(map.containsKey(null));
-        }
-        assertEquals("A", map.get("first"));
-        assertEquals("B", map.get("second"));
-        assertEquals("C", map.get("third"));
-        assertEquals(null, map.get("fourth"));
-    }
-
-}
